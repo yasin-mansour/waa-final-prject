@@ -1,5 +1,7 @@
 package mum.edu.demo.demain;
 
+import mum.edu.demo.validation.UserEmail;
+
 import java.util.List;
 import java.util.Set;
 
@@ -82,19 +84,20 @@ public class User {
     private Long id;
 
     @NotEmpty
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 50, message= "{Size.name.validation}")
     private String firstName;
 
     @NotEmpty
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 50, message= "{Size.name.validation}")
     private String lastName;
 
     @NotEmpty
     @Email
     @Column(name = "username")
+    @UserEmail
     private String email;
 
-    @Size(min = 4)
+    @Size(min = 4, message= "{Size.password.validation}")
     @Column(name = "password")
     private String password;
 

@@ -62,10 +62,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotEmpty
-    @Size(min = 4, max = 50)
+    @Size(min = 4, max = 50, message = "{Size.name.validation}")
     private String name;
     @NotEmpty
-    @Size(min = 4, max = 255)
+    @Size(min = 4, max = 255, message = "{Size.name.validation}")
     private String description;
     @Min(value = 1)
     private int price;
@@ -80,6 +80,9 @@ public class Product {
     private UserOrder order;
 
     private boolean isSold;
+
+    @Transient
+    private MultipartFile image;
 
     public int getId() {
         return id;
@@ -154,5 +157,13 @@ public class Product {
 
     public boolean inCart(String email){
             return this.getCarts().stream().filter(user -> user.getEmail().equals(email)).count() > 0;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -60,6 +61,7 @@ public class productController {
         if (bindingResult.hasErrors()) {
             return "product";
         }
+        MultipartFile image = product.getImage();
         Principal principal = request.getUserPrincipal();
         if(principal != null){
             Authentication authentication = (Authentication) principal;
@@ -69,7 +71,20 @@ public class productController {
                 mum.edu.demo.demain.User seller = userObject.get();
                 seller.addProduct(product);
                 product.setOwner(seller);
-                productService.save(product);
+                product = productService.save(product);
+                String uploadsDir = "/images/";
+                String realPathtoUploads =  request.getServletContext().getRealPath(uploadsDir);
+                if(! new File(realPathtoUploads).exists())
+                {
+                    new File(realPathtoUploads).mkdir();
+                }
+                if (image != null && !image.isEmpty()) {
+                    try {
+                        image.transferTo(new File(realPathtoUploads  + product.getId() + ".png"));
+                    } catch (Exception e) {
+                        throw new NotFoundException(e.getMessage());
+                    }
+                }
             }
 
         }

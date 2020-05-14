@@ -43,7 +43,7 @@ public class Address implements Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Size(min = 5)
+    @Size(min = 5, max=255, message = "{Size.name.validation}")
     private String Street;
 
     @NotEmpty

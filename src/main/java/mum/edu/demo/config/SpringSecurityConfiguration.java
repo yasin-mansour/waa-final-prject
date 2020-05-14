@@ -33,6 +33,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/seller/product").hasRole("SELLER")
                 .antMatchers("/orders").hasRole("BUYER")
                 .antMatchers("/cart").hasRole("BUYER")
+                .antMatchers("/orders/{id}/pdf").hasRole("BUYER")
                 .antMatchers("/carts/**").hasRole("BUYER")
                 .antMatchers("/follow/**").hasRole("BUYER")
                 .antMatchers("/unfollow/**").hasRole("BUYER")

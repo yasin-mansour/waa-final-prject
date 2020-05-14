@@ -82,7 +82,7 @@
                 <label for="image">
                     <span>image</span>
                 </label>
-                <input type="file" name="file" id="image" />
+                <input type="file" id="image" th:field="*{image}"/>
                 <p th:if="${#fields.hasErrors('image')}" th:errors="*{image}" th:errorclass="fieldError">
                     Incorrect date
                 </p>

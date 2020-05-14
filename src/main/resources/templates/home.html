@@ -77,7 +77,7 @@
     <div th:each="product: ${products}">
         <div class="col-sm-6 col-md-3" style="padding-bottom: 15px">
             <div class="thumbnail">
-                <!-- <img src="#springUrl("/resource/images/${product.productId}.png")" alt="image"  style = "width:100%"/>-->
+                 <img th:src="@{'images/' + ${product.id} + '.png'}" alt="image"  style = "width:100%"/>
                 <div class="caption">
                     <h3 th:text="${product.name}"></h3>
                     <p th:text="${product.description}"></p>

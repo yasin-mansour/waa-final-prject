@@ -45,13 +45,13 @@ public class Payment implements Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Size(min = 16, max = 16)
+    @Size(min = 16, max = 16, message = "{Size.equal}")
     private String cardNumber;
 
-    @Size(min = 4, max = 4)
+    @Size(min = 4, max = 4, message = "{Size.equal}")
     private String code;
 
-    @Size(min = 4)
+    @Size(min = 4, max=255, message = "{Size.name.validation}")
     private String holderName;
 
     public int getId() {

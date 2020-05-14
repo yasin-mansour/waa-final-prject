@@ -31,7 +31,7 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Size(min=5, max = 255)
+    @Size(min=5, max = 255, message = "{Size.name.validation}")
     private String text;
     private boolean active;
 

@@ -10,7 +10,12 @@ import mum.edu.demo.service.ProductService;
 import mum.edu.demo.service.ReviewService;
 import mum.edu.demo.service.UserOrderService;
 import mum.edu.demo.service.UserService;
+import mum.edu.demo.util.GeneratePdfReport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -22,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -240,5 +246,28 @@ public class orderController {
             }
         }
         return "redirect:/orders";
+    }
+
+    @RequestMapping(value = "/orders/{id}/pdf", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> citiesReport(@PathVariable int id) {
+
+        Optional<UserOrder> order = userOrderService.findById(id);
+        if (order.isPresent()) {
+            ByteArrayInputStream bis = GeneratePdfReport.citiesReport(order.get());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "inline; filename=citiesreport.pdf");
+
+            return ResponseEntity
+                    .ok()
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(new InputStreamResource(bis));
+        } else {
+            throw new NotFoundException("Order Not Found");
+        }
+
+
     }
 }

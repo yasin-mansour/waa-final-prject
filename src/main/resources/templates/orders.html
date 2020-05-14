@@ -76,6 +76,7 @@
             </td>
             <td>
                 <div sec:authorize="hasRole('ROLE_BUYER')" th:switch="${order.status}">
+                    <a th:href="@{'/orders/' + ${order.id} +'/pdf'}" target="_blank" class="btn btn-danger btn-mini">pdf</a>
                     <div th:case="null">
                         <a th:href="@{'/orders/' + ${order.id} +'/remove'}" class="btn btn-danger btn-mini">Remove</a>
                     </div>
