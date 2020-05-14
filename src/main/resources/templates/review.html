@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<section>
+    <div class="jumbotron">
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger btn-mini pull-right" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Order Review</h1>
+            <div sec:authorize="hasAnyRole('ROLE_BUYER')">
+                Points: <span th:text="${#authentication.principal.points}"></span>
+                <br/>
+                Money: <span th:text="${#authentication.principal.money}"></span>
+            </div>
+        </div>
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div class="d-flex">
+                <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<section class="container">
+    <form action="#" th:action="@{'/orders/' + ${orderId} + '/review'}" th:object="${review}"
+          method="post">
+        <fieldset>
+            <legend><span >Add Review</span></legend>
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input
+                    is incorrect
+                </li>
+            </ul>
+            <div>
+                <label for="text">
+                    <span>review</span>
+                </label>
+                <textarea type="text" id="text" th:field="*{text}"/>
+                <p th:if="${#fields.hasErrors('text')}" th:errors="*{text}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+
+            <p id="buttons">
+                <input id="submit" type="submit" value="Add Review">
+            </p>
+        </fieldset>
+    </form>
+</section>
+</body>
+</html>

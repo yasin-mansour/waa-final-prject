@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<section>
+    <div class="jumbotron">
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger btn-mini" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="d-flex">
+                <div class="pr-1">
+                    <form action="#" th:action="@{/login}" method="get">
+                        <input class="btn btn-danger btn-mini" type="submit" value="Login"/>
+                    </form>
+                </div>
+                <div class="pr-1">
+                    <a th:href="@{/seller/register}" class="btn btn-danger btn-mini">Seller Sign up</a>
+                </div>
+                <div>
+                    <a th:href="@{/buyer/register}" class="btn btn-danger btn-mini">Buyer Sign up</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Welcome</h1>
+            <p>WAA Market</p>
+            <div sec:authorize="hasAnyRole('ROLE_BUYER')">
+                Points: <span th:text="${#authentication.principal.points}"></span>
+                <br/>
+                Money: <span th:text="${#authentication.principal.money}"></span>
+            </div>
+        </div>
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div>
+                <div sec:authorize="!isAuthenticated()" class="d-flex">
+                    <a th:href="@{/sellers}" class="btn btn-danger btn-mini">Seller List</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_ADMIN')">
+                    <a th:href="@{/sellers}" class="btn btn-danger btn-mini">Seller List</a>
+                    <a th:href="@{/admin/orders}" class="btn btn-danger btn-mini">Orders</a>
+                    <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+                </div>
+                <div sec:authorize="hasAnyRole('ROLE_BUYER')">
+                    <a th:href="@{/sellers}" class="btn btn-danger btn-min">Seller List</a>
+                    <a th:href="@{/cart}" class="btn btn-danger btn-mini">Cart</a>
+                    <a th:href="@{/orders}" class="btn btn-danger btn-mini">My Order</a>
+                    <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+                </div>
+
+                <a sec:authorize="hasRole('ROLE_PRODUCT')" th:href="@{/seller/product}" class="btn btn-danger btn-mini">add
+                    product</a>
+                <a sec:authorize="hasRole('ROLE_SELLER')" th:href="@{/ordersList}" class="btn btn-danger btn-mini">Orders</a>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<section class="container">
+
+    <div th:each="product: ${products}">
+        <div class="col-sm-6 col-md-3" style="padding-bottom: 15px">
+            <div class="thumbnail">
+                <!-- <img src="#springUrl("/resource/images/${product.productId}.png")" alt="image"  style = "width:100%"/>-->
+                <div class="caption">
+                    <h3 th:text="${product.name}"></h3>
+                    <p th:text="${product.description}"></p>
+                    <p th:text="${product.price} + ' USD'"></p>
+                    <p sec:authorize="hasRole('ROLE_PRODUCT')"
+                       th:if="${product.owner.email == #authentication.principal.username}">
+                        <a th:href="@{'/products/' + ${product.id} + '/edit'}" class="btn btn-danger btn-mini">Edit</a>
+                        <a th:href="@{'/products/' + ${product.id} + '/delete'}"
+                           class="btn btn-danger btn-mini">Delete</a>
+                    </p>
+                    <div sec:authorize="hasRole('ROLE_BUYER')">
+                        <td th:switch="${product.inCart(#authentication.principal.username)}">
+                            <div th:case="true">
+                                <a th:href="@{'/carts/' + ${product.id} + '/remove'}" class="btn btn-danger btn-mini">Remove
+                                    From Cart</a>
+                            </div>
+                            <div th:case="false">
+                                <a th:href="@{'/carts/' + ${product.id}}" class="btn btn-danger btn-mini">Add To
+                                    Cart</a>
+                            </div>
+                        </td>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

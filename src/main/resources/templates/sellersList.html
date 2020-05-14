@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<section>
+    <div class="jumbotron">
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger btn-mini" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </div>
+            <div sec:authorize="!isAuthenticated()" class="d-flex">
+                <div class="pr-1">
+                    <form action="#" th:action="@{/login}" method="get">
+                        <input class="btn btn-danger btn-mini" type="submit" value="Login"/>
+                    </form>
+                </div>
+                <div class="pr-1">
+                    <a th:href="@{/seller/register}" class="btn btn-danger btn-mini">Seller Sign up</a>
+                </div>
+                <div>
+                    <a th:href="@{/buyer/register}" class="btn btn-danger btn-mini">Buyer Sign up</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Seller List</h1>
+            <div sec:authorize="hasAnyRole('ROLE_BUYER')">
+                Points: <span th:text="${#authentication.principal.points}"></span>
+                <br/>
+                Money: <span th:text="${#authentication.principal.money}"></span>
+            </div>
+        </div>
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div>
+                <a sec:authorize="!isAuthenticated()"  th:href="@{/sellers}" class="btn btn-danger btn-mini">Seller List</a>
+                <a sec:authorize="hasAnyRole('ROLE_ADMIN')" th:href="@{/sellers}" class="btn btn-danger btn-mini">Seller List</a>
+                <a sec:authorize="hasAnyRole('ROLE_ADMIN')" th:href="@{/admin/orders}" class="btn btn-danger btn-mini">Orders</a>
+                <a sec:authorize="hasAnyRole('ROLE_BUYER')" th:href="@{/sellers}" class="btn btn-danger btn-min">Seller List</a>
+                <a sec:authorize="hasAnyRole('ROLE_BUYER')" th:href="@{/cart}" class="btn btn-danger btn-mini">Cart</a>
+                <a sec:authorize="hasAnyRole('ROLE_BUYER')" th:href="@{/orders}" class="btn btn-danger btn-mini">My Order</a>
+                <a sec:authorize="hasRole('ROLE_PRODUCT')" th:href="@{/seller/product}" class="btn btn-danger btn-mini">add product</a>
+                <a sec:authorize="hasRole('ROLE_SELLER')" th:href="@{/ordersList}" class="btn btn-danger btn-mini">Orders</a>
+                <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container">
+    <table>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                setting
+            </th>
+        </tr>
+        <tr th:each="seller: ${sellers}">
+            <td th:text="${seller.firstName}"/>
+            <td th:text="${seller.email}"/>
+            <td sec:authorize="hasRole('ROLE_ADMIN')" th:switch="${seller.canAddProduct()}">
+                <div th:case="true">
+                    Activated
+                </div>
+                <div th:case="false">
+                    <a th:href="@{'seller/' + ${seller.id} + '/active'}" class="btn btn-danger btn-mini">Active</a>
+                </div>
+            </td>
+            <td sec:authorize="hasRole('ROLE_BUYER')"
+                th:switch="${seller.isFollowedBy(#authentication.principal.username)}">
+                <div th:case="true">
+                    <a th:href="@{'unfollow/' + ${seller.id} }" class="btn btn-danger btn-mini">Un Follow</a>
+                </div>
+                <div th:case="false">
+                    <a th:href="@{'follow/' + ${seller.id} }" class="btn btn-danger btn-mini">Follow</a>
+                </div>
+                <a th:href="@{'/seller/' + ${seller.id} + '/reviews'}" class="btn btn-danger btn-mini">Reviews</a>
+            </td>
+            <td sec:authorize="hasRole('ROLE_SELLER')">
+                <a th:href="@{'/seller/' + ${seller.id} + '/reviews'}" class="btn btn-danger btn-mini">Reviews</a>
+            </td>
+            <td sec:authorize="!isAuthenticated()">
+                <a th:href="@{'/seller/' + ${seller.id} + '/reviews'}" class="btn btn-danger btn-mini">Reviews</a>
+            </td>
+        </tr>
+    </table>
+</section>
+</body>
+</html>

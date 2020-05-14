@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../static/css/main.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/static/css/main.css}" href="../static/css/main.css"/>
+</head>
+<body>
+
+<div id="global">
+    <form action="#" th:action="${type} == 'seller'?  @{/seller} : @{/buyer}" th:object="${user}"
+          method="post">
+        <fieldset>
+            <legend><span th:text="#{user.form.title}">Add a User</span></legend>
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input
+                    is incorrect
+                </li>
+            </ul>
+            <div>
+                <label for="firstName">
+                    <span data-th-text="#{user.form.firstName}">firstName</span>
+                </label>
+                <input type="text" id="firstName" th:field="*{firstName}"/>
+                <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <div>
+                <label for="lastName">
+                    <span data-th-text="#{user.form.lastName}">lastName</span>
+                </label>
+                <input type="text" id="lastName" th:field="*{lastName}"/>
+                <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+            <div>
+                <label for="email">
+                    <span data-th-text="#{user.form.email}">email</span>
+                </label>
+                <input type="text" id="email" th:field="*{email}"/>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <div>
+                <label for="password">
+                    <span data-th-text="#{user.form.password}">password</span>
+                </label>
+                <input type="password" id="password" th:field="*{password}"/>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <p id="buttons">
+                <input id="reset" type="reset" th:value="#{user.form.resetbtn}" value="Reset" tabindex="4">
+                <input id="submit" type="submit" tabindex="5" th:value="#{user.form.addbtn}" value="Add USEr">
+            </p>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>

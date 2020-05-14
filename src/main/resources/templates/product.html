@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<section>
+    <div class="jumbotron">
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger btn-mini pull-right" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>New Product</h1>
+        </div>
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div>
+                <a sec:authorize="hasRole('ROLE_SELLER')" th:href="@{/ordersList}" class="btn btn-danger btn-mini">Orders</a>
+                <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<section class="container">
+    <form action="#" th:action="@{/products}" enctype="multipart/form-data" th:object="${product}"
+          method="post">
+        <fieldset>
+            <legend><span >Add a Product</span></legend>
+            <ul th:if="${#fields.hasErrors('*')}">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input
+                    is incorrect
+                </li>
+            </ul>
+            <input type="hidden" id="id" th:field="*{id}"/>
+            <div>
+                <label for="name">
+                    <span>name</span>
+                </label>
+                <input type="text" id="name" th:field="*{name}"/>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <div>
+                <label for="description">
+                    <span>description</span>
+                </label>
+                <textarea type="text" id="description" th:field="*{description}"/>
+                <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <div>
+                <label for="price">
+                    <span>price</span>
+                </label>
+                <input type="number" id="price" th:field="*{price}"/>
+                <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <div>
+                <label for="image">
+                    <span>image</span>
+                </label>
+                <input type="file" name="file" id="image" />
+                <p th:if="${#fields.hasErrors('image')}" th:errors="*{image}" th:errorclass="fieldError">
+                    Incorrect date
+                </p>
+            </div>
+
+            <p id="buttons">
+                <input id="reset" type="reset" value="Reset" tabindex="4">
+                <input id="submit" type="submit" tabindex="5" value="Add Product">
+            </p>
+        </fieldset>
+    </form>
+</section>
+</body>
+</html>

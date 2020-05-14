@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../static/css/main.css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<section>
+    <div class="jumbotron">
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div sec:authorize="isAuthenticated()">
+                <div>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger btn-mini pull-right" type="submit" value="Logout"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Welcome</h1>
+            <p>WAA Market</p>
+        </div>
+        <div class="d-flex col-lg-12">
+            <div class="flex-1"></div>
+            <div>
+                <a sec:authorize="hasRole('ROLE_PRODUCT')" th:href="@{/seller/product}" class="btn btn-danger btn-mini">add
+                    product</a>
+                <a sec:authorize="hasRole('ROLE_SELLER')" th:href="@{/ordersList}" class="btn btn-danger btn-mini">Orders</a>
+                <a th:href="@{/}" class="btn btn-danger btn-mini">Home</a>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+<section class="container">
+    <table>
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Status
+            </th>
+        </tr>
+        <tr th:each="order: ${orders}">
+            <td th:text="${order.product.name}" />
+            <td th:switch="${order.status}">
+                <div th:case="Done">
+                    Done
+                </div>
+                <div th:case="CANCELED">
+                    CANCELED
+                </div>
+                <div th:case="*">
+                    <form action="#" th:action="@{'/orders/'+ ${order.id} +'/status'}" th:object="${order}"
+                          method="post">
+                        <select th:value="*{status}" id="status" name="status" required>
+                            <option disabled selected value>-</option>
+                            <option th:value="'Shipped-On'" th:selected="*{status=='Shipped-On'}">Shipped-On</option>
+                            <option th:value="'way-Delivered'" th:selected="*{status=='way-Delivered'}">way-Delivered</option>
+                            <option th:if="*{status == null}" th:value="'CANCELED'" th:selected="*{status=='CANCELED'}">CANCELED</option>
+                            <option th:value="'Done'">Done</option>
+                        </select>
+                        <input id="submit" type="submit" tabindex="5" value="Change Status">
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
+</section>
+</body>
+</html>

@@ -1,0 +1,36 @@
+.d-flex{
+    display: flex;
+}
+
+.flex-column{
+    flex-direction: column;
+}
+
+.flex-row{
+    flex-direction: row;
+}
+
+.flex-1{
+    flex: 1;
+}
+
+.overflow-auto{
+    overflow: auto;
+}
+
+.pl-1 {
+    padding-left: 1em;
+}
+
+.pr-1 {
+    padding-right: 1em;
+}
+
+table{
+    width: 100%;
+}
+
+table td, table th{
+    padding: 0 5px;
+    border: 1px solid black;
+}
