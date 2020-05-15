@@ -74,10 +74,11 @@ public class orderController {
     }
 
     @RequestMapping("/orders/{id}/review")
-    public String addReview(@Valid Review review, BindingResult bindingResult, @PathVariable int id, HttpServletRequest request) {
+    public String addReview(@Valid Review review, BindingResult bindingResult, @PathVariable int id, HttpServletRequest request, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "/orders/" + id + "/review";
+            model.addAttribute("orderId", id);
+            return "review";
         }
 
         Principal principal = request.getUserPrincipal();
@@ -91,11 +92,14 @@ public class orderController {
 
                 if (orderOptional.isPresent()) {
                     UserOrder order = orderOptional.get();
+                    review.setId(0);
                     order.setReview(review);
                     review.setOrder(order);
                     reviewService.save(review);
                     buyer.setPoints(buyer.getPoints() + 100);
                     userService.save(buyer);
+                } else {
+                    throw new NotFoundException("this order is not for this user");
                 }
 
             }
@@ -170,7 +174,7 @@ public class orderController {
                 mum.edu.demo.demain.User buyer = userBuyerOptional.get();
                 List<Product> products = buyer.getCart();
                 int totalPrice = buyer.getCartTotalPrice();
-                if (totalPrice < buyer.getTotalMoney()) {
+                if (totalPrice <= buyer.getTotalMoney()) {
                     buyer.setCart(new ArrayList<>());
                     buyer.withdrawMoney(totalPrice);
                     products.stream().forEach(product -> {
@@ -180,7 +184,7 @@ public class orderController {
                                 orderClone.setProduct(product);
                                 orderClone.setUser(buyer);
                                 userOrderService.save(orderClone);
-                                product.setOrder(orderClone);
+                                product.addOrder(orderClone);
                                 buyer.addOrder(orderClone);
                             } catch (CloneNotSupportedException e) {
                                 throw new NotFoundException("Unknown Exception");
@@ -235,7 +239,7 @@ public class orderController {
                     UserOrder order = orderOptional.get();
                     Product product = order.getProduct();
                     buyer.setMoney(product.getPrice() + buyer.getMoney());
-                    product.setOrder(null);
+                    product.getOrders().removeIf(o -> o.getId() == o.getId());
                     productService.save(product);
                     order.setUser(null);
                     userOrderService.delete(order);

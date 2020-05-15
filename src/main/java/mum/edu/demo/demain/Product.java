@@ -76,8 +76,8 @@ public class Product {
     @ManyToMany(mappedBy = "cart")
     private List<User> carts;
 
-    @OneToOne(mappedBy = "product")
-    private UserOrder order;
+    @OneToMany(mappedBy = "product")
+    private List<UserOrder> orders;
 
     private boolean isSold;
 
@@ -147,12 +147,16 @@ public class Product {
         return this.isSold;
     }
 
-    public UserOrder getOrder() {
-        return order;
+    public List<UserOrder> getOrders() {
+        return orders;
     }
 
-    public void setOrder(UserOrder order) {
-        this.order = order;
+    public void setOrders(List<UserOrder> orders) {
+        this.orders = orders;
+    }
+
+    public void addOrder(UserOrder order){
+        this.orders.add(order);
     }
 
     public boolean inCart(String email){

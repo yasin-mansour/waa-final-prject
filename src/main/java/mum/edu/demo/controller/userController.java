@@ -75,6 +75,7 @@ public class userController {
             user.setRoles(roles);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setActive(1);
+            user.setMoney(500);
             userService.save(user);
         }
 

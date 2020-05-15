@@ -54,7 +54,7 @@ public class UserOrder implements Cloneable {
 
     private String status;
 
-    @OneToOne
+    @ManyToOne
     private Product product;
 
     @OneToOne
@@ -129,7 +129,10 @@ public class UserOrder implements Cloneable {
     }
 
     public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+        UserOrder clone = (UserOrder) super.clone();
+        clone.address = (Address) this.address.clone();
+        clone.payment = (Payment) this.payment.clone();
+        return clone;
     }
 
     public static UserOrder.UserOrderBuilder create() {

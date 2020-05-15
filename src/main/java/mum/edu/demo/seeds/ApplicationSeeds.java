@@ -122,7 +122,7 @@ public class ApplicationSeeds {
                 .build();
         order.setUser(buyer);
         this.userRepository.save(buyer);
-        product.setOrder(order);
+        product.setOrders(new ArrayList<>(Arrays.asList(order)));
         this.productRepository.save(product);
     }
 }

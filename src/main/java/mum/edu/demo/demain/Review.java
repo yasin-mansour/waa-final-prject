@@ -35,7 +35,7 @@ public class Review {
     private String text;
     private boolean active;
 
-    @OneToOne(mappedBy = "review")
+    @OneToOne(mappedBy = "review", cascade = CascadeType.DETACH)
     private UserOrder order;
 
     public int getId() {
