@@ -1,6 +1,6 @@
 1.	Members: Yasin Mansour/610693
-2.	All the features have been implemented by me.
-3.	All done by me
+2.	All the features have been implemented by myself.
+3.	All done by myself
 4.
 i.	you must have tomcat on your machine.
 ii.	Use IntelliJ to run the application
